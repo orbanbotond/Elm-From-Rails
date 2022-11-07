@@ -1,6 +1,6 @@
 import {
   Elm
-} from '../Reverse.elm'
+} from '../elm/Reverse.elm'
 
 import { Controller } from "@hotwired/stimulus"
 
