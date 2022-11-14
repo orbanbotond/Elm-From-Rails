@@ -12,13 +12,13 @@ import Random
 -- Custom Spin Generator
 type Symbol = Cherry | Seven | Bar | Grapes
 
-symbol : Random.Generator Symbol
-symbol =
+symbol_generator : Random.Generator Symbol
+symbol_generator =
   Random.uniform Cherry [ Seven, Bar, Grapes ]
 
 spin : Random.Generator Model
 spin =
-  Random.map3 Model symbol symbol symbol
+  Random.map3 Model symbol_generator symbol_generator symbol_generator
 --
 
 -- MAIN
