@@ -69,33 +69,9 @@ subscriptions model =
   Sub.none
 
 -- VIEW
-display1 : Model -> String
-display1 model =
-  case model.one of
-    Cherry -> 
-      "Cherry"
-    Seven ->
-      "Seven"
-    Bar ->
-      "Bar"
-    Grapes ->
-      "Grapes"
-
-display2 : Model -> String
-display2 model =
-  case model.two of
-    Cherry -> 
-      "Cherry"
-    Seven ->
-      "Seven"
-    Bar ->
-      "Bar"
-    Grapes ->
-      "Grapes"
-
-display3 : Model -> String
-display3 model =
-  case model.three of
+display_symbol : Symbol -> String
+display_symbol symbol =
+  case symbol of
     Cherry -> 
       "Cherry"
     Seven ->
@@ -111,7 +87,7 @@ win model =
 
 display : Model -> String
 display model =
-  display1(model) ++ " " ++ display2(model) ++ " " ++ display3(model)
+  display_symbol(model.one) ++ " " ++ display_symbol(model.two) ++ " " ++ display_symbol(model.three)
 
 displayWin : Model -> String
 displayWin model =
