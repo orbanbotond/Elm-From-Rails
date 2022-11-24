@@ -13,8 +13,8 @@ main : Program () Model Msg
 main =
   Browser.application
     { init = init
-    , view = view
     , update = update
+    , view = view
     , subscriptions = subscriptions
     , onUrlChange = UrlChanged
     , onUrlRequest = LinkClicked
@@ -27,13 +27,13 @@ main =
 
 type alias Model =
   { key : Nav.Key
-  , url : Url.Url
+  , route : Maybe Route
   }
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url key =
-  ( Model key url, Cmd.none )
+init flags url navKey =
+  ( { key = navKey, route = Url.Parser.parse urlParser url }, Cmd.none )
 
 
 
@@ -57,27 +57,33 @@ update msg model =
           ( model, Nav.load href )
 
     UrlChanged url ->
-      ( { model | url = url }
+      ( { model | route = Url.Parser.parse urlParser url }
       , Cmd.none
       )
 
 -- Routes
 
 
-type Route
-  = Home
-  | BlogQuery (Maybe String)
-  | Profile
-  | Reviews String
+--type Route
+--  = Home
+--  | BlogQuery (Maybe String)
+--  | Profile
+--  | Reviews String
 
-routeParser : Parser (Route -> a) a
-routeParser =
-  oneOf
-    [ Url.Parser.map Home  ( Url.Parser.s "home")
-    , Url.Parser.map Profile  ( Url.Parser.s "profile")
-    , Url.Parser.map Reviews  ( Url.Parser.s "reviews" </> string)
-    ]
+--routeParser : Parser (Route -> a) a
+--routeParser =
+--  oneOf
+--    [ Url.Parser.map Home  ( Url.Parser.s "home")
+--    , Url.Parser.map Profile  ( Url.Parser.s "profile")
+--    , Url.Parser.map Reviews  ( Url.Parser.s "reviews" </> string)
+--    ]
 
+type alias Route =
+    String
+
+urlParser : Url.Parser.Parser (Route -> a) a
+urlParser =
+    Url.Parser.string
 
 -- SUBSCRIPTIONS
 
@@ -102,6 +108,15 @@ subscriptions _ =
 
 view : Model -> Browser.Document Msg
 view model =
+  let
+    title =
+      case model.route of
+        Just route ->
+            route
+
+        Nothing ->
+            "Invalid route"
+  in
   { title = "URL Interceptor"
   , body =
       [ div [ id "content" ]
@@ -116,7 +131,7 @@ view model =
                 ]
             ]
           , text "The current URL is: "
-          , b [] [ text (Url.toString model.url) ]
+          , b [] [ text title ]
           , div [ class "container"]
               [ div [ class "row"]
                 [ div [ class "col-sm"] [ text "One of three columns"]
