@@ -1,6 +1,6 @@
 import {
   Elm
-} from '../elm/Form.elm'
+} from '../elm/Navigation.elm'
 
 import { Controller } from "@hotwired/stimulus"
 

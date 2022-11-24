@@ -69,8 +69,8 @@ subscriptions model =
   Sub.none
 
 -- VIEW
-display_symbol : Symbol -> String
-display_symbol symbol =
+symbolToString : Symbol -> String
+symbolToString symbol =
   case symbol of
     Cherry -> 
       "Cherry"
@@ -87,7 +87,7 @@ win model =
 
 display : Model -> String
 display model =
-  display_symbol(model.one) ++ " " ++ display_symbol(model.two) ++ " " ++ display_symbol(model.three)
+  [model.one, model.two, model.three] |> List.map symbolToString |> String.join "|"
 
 displayWin : Model -> String
 displayWin model =
