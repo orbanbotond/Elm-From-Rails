@@ -8,7 +8,6 @@ import Url.Parser.Query as Query
 
 -- MAIN
 
-
 main : Program () Model Msg
 main =
   Browser.application
@@ -20,30 +19,22 @@ main =
     , onUrlRequest = LinkClicked
     }
 
-
-
 -- MODEL
-
 
 type alias Model =
   { key : Nav.Key
   , route : Maybe Route
   }
 
-
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url navKey =
   ( { key = navKey, route = Url.Parser.parse urlParser url }, Cmd.none )
 
-
-
 -- UPDATE
-
 
 type Msg
   = LinkClicked Browser.UrlRequest
   | UrlChanged Url.Url
-
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -62,7 +53,6 @@ update msg model =
       )
 
 -- Routes
-
 
 --type Route
 --  = Home
@@ -87,12 +77,9 @@ urlParser =
 
 -- SUBSCRIPTIONS
 
-
 subscriptions : Model -> Sub Msg
 subscriptions _ =
   Sub.none
-
-
 
 -- VIEW
 
