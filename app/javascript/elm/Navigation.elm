@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Url
 import Url.Parser exposing (Parser, (</>), (<?>), int, map, oneOf, s, string)
 import Url.Parser.Query as Query
+--import Page.Home exposing (content)
 
 -- MAIN
 
@@ -54,26 +55,19 @@ update msg model =
 
 -- Routes
 
---type Route
---  = Home
---  | BlogQuery (Maybe String)
---  | Profile
---  | Reviews String
+type Route
+  = Home
+  | BlogQuery (Maybe String)
+  | Profile
+  | Reviews String
 
---routeParser : Parser (Route -> a) a
---routeParser =
---  oneOf
---    [ Url.Parser.map Home  ( Url.Parser.s "home")
---    , Url.Parser.map Profile  ( Url.Parser.s "profile")
---    , Url.Parser.map Reviews  ( Url.Parser.s "reviews" </> string)
---    ]
-
-type alias Route =
-    String
-
-urlParser : Url.Parser.Parser (Route -> a) a
+urlParser : Parser (Route -> a) a
 urlParser =
-    Url.Parser.string
+  oneOf
+    [ Url.Parser.map Home  ( Url.Parser.s "home")
+    , Url.Parser.map Profile  ( Url.Parser.s "profile")
+    , Url.Parser.map Reviews  ( Url.Parser.s "reviews" </> string)
+    ]
 
 -- SUBSCRIPTIONS
 
@@ -83,38 +77,33 @@ subscriptions _ =
 
 -- VIEW
 
---urlInterpretation : Model -> String
---urlInterpretation model =
---  case routeParser of
---    Maybe Home ->
---      "Home"
---    Maybe Profile ->
---      "Profile"
---    Just a ->
---      "Homepage"
-
 view : Model -> Browser.Document Msg
 view model =
   let
     title =
       case model.route of
         Just route ->
-            route
+          case route of
+            Home ->
+              "Home"
+            BlogQuery seourl ->
+              "BlogQuery"
+            Profile ->
+              "Profile"
+            Reviews seourl ->
+              "Reviews"
 
         Nothing ->
-            "Invalid route"
+          "Invalid route"
   in
   { title = "URL Interceptor"
   , body =
       [ div [ id "content" ]
         [ nav [ class "navbar navbar-light bg-faded"]
             [ ul [ class "nav nav-tabs" ]
-                [ li [ class "nav-item"]
-                    [a [ class "nav-link", href "/activities"]
-                       [ text "Erdemnaplo" ] ]
-                  ,li [ class "nav-item"]
-                    [a [ class "nav-link", href "/kids"]
-                       [ text "Gyerekek" ] ]
+                [ navBarLink "/home" "Home"
+                  ,navBarLink "/profile" "Profile"
+                  ,navBarLink "/reviews/the-first-elm-app" "First Elm App"
                 ]
             ]
           , text "The current URL is: "
@@ -126,13 +115,6 @@ view model =
                  , div [ class "col-sm"] [ text "One of three columns"]
                 ]
               ]
-          , ul []
-              [ viewLink "/home"
-              , viewLink "/profile"
-              , viewLink "/reviews/the-century-of-the-self"
-              , viewLink "/reviews/public-opinion"
-              , viewLink "/reviews/shah-of-shahs"
-              ]
         ]
       ]
   }
@@ -140,3 +122,8 @@ view model =
 viewLink : String -> Html msg
 viewLink path =
   li [] [ a [ href path ] [ text path ] ]
+
+navBarLink : String -> String -> Html msg
+navBarLink path display =
+  li [ class "nav-item"] [a [ class "nav-link", href path]
+           [ text display ] ]
